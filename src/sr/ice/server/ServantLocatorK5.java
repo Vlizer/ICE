@@ -17,7 +17,7 @@ import java.util.Queue;
 
 
 
-public class ServantLocator implements Ice.ServantLocator
+public class ServantLocatorK5 implements Ice.ServantLocator
 {
 	private Object k1 = null;
 	private Object k2 = null;
@@ -33,15 +33,9 @@ public class ServantLocator implements Ice.ServantLocator
 	private Ice.ObjectAdapter adapter;
 	private FileSaver fileSaver = new FileSaver();
 	
-	public ServantLocator(String id,Ice.ObjectAdapter adapter)
+	public ServantLocatorK5(String id)
 	{
 		System.out.println("Constructor Servant Locator "+ id+ ".");
-		this.adapter = adapter;
-		for(int i=0;i<maxIndex;i++){
-			k3.add(new CalcI());
-		}
-		k4=new CalcI();
-		
 	}
 
 	
@@ -49,19 +43,6 @@ public class ServantLocator implements Ice.ServantLocator
 	public Object locate(Current curr, LocalObjectHolder cookie) throws UserException 
 	{
 		Object servant = null;
-			if(curr.id.category.equalsIgnoreCase("k1")){
-				k1=fileSaver.loadK1(curr.id.name);
-				servant = k1;
-			}
-			else if(curr.id.category.equalsIgnoreCase("k2")){
-				k2 = new CalcI();
-				servant = k2;
-			}else if(curr.id.category.equalsIgnoreCase("k3")){
-				servant = k3.get(k2Index++);
-				k2Index%=maxIndex;
-			}else if(curr.id.category.equalsIgnoreCase("k4")){
-				servant=k4;
-			}else if(curr.id.category.equalsIgnoreCase("k5")){
 				if(k5.containsKey(curr.id.name)){
 					servant=k5.get(curr.id.name);
 				}else if(lastAccessedAccount.size() >= k5Limit){
@@ -71,7 +52,6 @@ public class ServantLocator implements Ice.ServantLocator
 				}else{
 					servant = loadServant(curr.id.name);
 				}
-			}
 			System.out.println("Locate : Cat: "+curr.id.category+ " Name: "+curr.id.name);
 			System.out.println("Servant: "+ servant.toString());
 		return servant;
@@ -100,14 +80,7 @@ public class ServantLocator implements Ice.ServantLocator
 
 	public void finished(Ice.Current curr, Ice.Object servant, java.lang.Object cookie) throws UserException 
 	{
-		if(curr.id.category.equalsIgnoreCase("k1")){
-				adapter.add(k1, new Identity(curr.id.name,"k1"));
-				System.out.println("Finished: Add K1 to adapter");
-		}
-		else if(curr.id.category.equalsIgnoreCase("k2")){
-			k2=null;
-			System.out.println("Finished:  Removing reference to k2");
-		}
+		
 	
 	}
 

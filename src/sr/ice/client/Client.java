@@ -1,87 +1,108 @@
-// **********************************************************************
-//
-// Copyright (c) 2003-2011 ZeroC, Inc. All rights reserved.
-//
-// This copy of Ice is licensed to you under the terms described in the
-// ICE_LICENSE file included in this distribution.
-//
-// **********************************************************************
-
 package sr.ice.client;
 
 import Demo.*;
-import Ice.AsyncResult;
 
 public class Client
 {
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) 
+	public static void main(String[] args) {
+		Client c = new Client();
+		Ice.Communicator communicator = null;
+		communicator = Ice.Util.initialize(args);
+		
+		c.t1("k1/c111", args,communicator);
+		c.t1("k1/c112", args,communicator);
+		c.t1("k1/c113", args,communicator);
+		c.t1("k1/c114", args,communicator);
+		c.t1("k1/c115", args,communicator);
+		c.t1("k1/c116", args,communicator);
+		c.t1("k1/c117", args,communicator);
+		c.t1("k1/c118", args,communicator);
+		c.t1("k1/c119", args,communicator);
+		
+		c.t1("k2/c111", args,communicator);
+		c.t1("k2/c112", args,communicator);
+		c.t1("k2/c113", args,communicator);
+		c.t1("k2/c114", args,communicator);
+		c.t1("k2/c115", args,communicator);
+		c.t1("k2/c116", args,communicator);
+		c.t1("k2/c117", args,communicator);
+		c.t1("k2/c118", args,communicator);
+		c.t1("k2/c119", args,communicator);
+		
+		c.t1("k3/c111", args,communicator);
+		c.t1("k3/c112", args,communicator);
+		c.t1("k3/c113", args,communicator);
+		c.t1("k3/c114", args,communicator);
+		c.t1("k3/c115", args,communicator);
+		c.t1("k3/c116", args,communicator);
+		c.t1("k3/c117", args,communicator);
+		c.t1("k3/c118", args,communicator);
+		c.t1("k3/c119", args,communicator);
+		
+		c.t1("k4/c111", args,communicator);
+		c.t1("k4/c112", args,communicator);
+		c.t1("k4/c113", args,communicator);
+		c.t1("k4/c114", args,communicator);
+		c.t1("k4/c115", args,communicator);
+		c.t1("k4/c116", args,communicator);
+		c.t1("k4/c117", args,communicator);
+		c.t1("k4/c118", args,communicator);
+		c.t1("k4/c119", args,communicator);
+		
+		c.t1("k5/c111", args,communicator);
+		c.t1("k5/c112", args,communicator);
+		c.t1("k5/c113", args,communicator);
+		c.t1("k5/c114", args,communicator);
+		c.t1("k5/c115", args,communicator);
+		c.t1("k5/c116", args,communicator);
+		c.t1("k5/c117", args,communicator);
+		c.t1("k5/c111", args,communicator);
+		c.t1("k5/c112", args,communicator);
+//		if (communicator != null) {
+//			try {
+//				communicator.destroy();
+//			} catch (Exception e) {
+//				System.err.println(e.getMessage());
+//				
+//			}
+//		}
+		try {
+			Thread.currentThread().sleep(40*1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (communicator != null) {
+			try {
+				communicator.destroy();
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+				
+			}
+		}
+	}
+	public void t1(String name,String[] args, Ice.Communicator communicator)
 	{
 		int status = 0;
-		Ice.Communicator communicator = null;
+		//Ice.Communicator communicator = null;
 
 		try {
-			// 1. Inicjalizacja ICE
-			communicator = Ice.Util.initialize(args);
-
-			// 2. Uzyskanie referencji obiektu na podstawie linii w pliku konfiguracyjnym
-			// Ice.ObjectPrx base = communicator.propertyToProxy("Calc1.Proxy");
-			// 2. To samo co powy¿ej, ale mniej ³adnie
-			Ice.ObjectPrx base = communicator.stringToProxy("k1/c333:tcp -h localhost -p 10000:udp -h localhost -p 10000:ssl -h localhost -p 10001");
-			
-			// 3. Rzutowanie, zawê¿anie
-
+			System.out.println("--------------------------------------");
+			System.out.println("Client : Creating Communicator");
+			//communicator = Ice.Util.initialize(args);
+			System.out.println("Client : Creating Base");
+			Ice.ObjectPrx base = communicator.stringToProxy(name+":tcp -h localhost -p 10000:udp -h localhost -p 10000:ssl -h localhost -p 10001");
+			System.out.println("Client : Calc Proxy");
 			CalcPrx calc = CalcPrxHelper.checkedCast(base);
 			if (calc == null) throw new Error("Invalid proxy");
-			
-			
-
-
-//			CalcPrx calc_oneway = (CalcPrx)calc.ice_oneway();
-//			CalcPrx calc_batch_oneway = (CalcPrx)calc.ice_batchOneway();
-//			CalcPrx calc_datagram = (CalcPrx)calc.ice_datagram();
-//			CalcPrx calc_batch_datagram = (CalcPrx)calc.ice_batchDatagram();
-
-
-			// 4. Wywolanie zdalnych operacji
-
 			String line = null;
 			java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
+
 			
-//			AsyncResult ar = null;
-						
-			do
-			{
-				try
-				{
-					System.out.print("==> ");
-					System.out.flush();
-					line = in.readLine();
+			System.out.println("Client : Start");
+			System.out.println(calc.add1(7, 8));
 
-					if (line == null)
-					{
-						break;
-					}
-					
-
-					if (line.equals("add1"))
-					{
-						System.out.println(calc.add1(7, 8));	
-					}
-					else if (line.equals("x"))
-					{
-						
-					}
-				}
-				catch (java.io.IOException ex)
-				{
-					System.err.println(ex);
-				}
-			}
-			while (!line.equals("x"));
-
+			System.out.println("--------------------------------------");
 
 		} catch (Ice.LocalException e) {
 			e.printStackTrace();
@@ -91,17 +112,13 @@ public class Client
 			System.err.println(e.getMessage());
 			status = 1;
 		}
-		if (communicator != null) {
-			// Clean up
-			//
-			try {
-				communicator.destroy();
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-				status = 1;
-			}
-		}
-		System.exit(status);
+//		if (communicator != null) {
+//			try {
+//				communicator.destroy();
+//			} catch (Exception e) {
+//				System.err.println(e.getMessage());
+//				status = 1;
+//			}
+//		}
 	}
-
 }

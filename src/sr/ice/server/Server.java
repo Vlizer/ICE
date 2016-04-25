@@ -1,17 +1,5 @@
-// **********************************************************************
-//
-// Copyright (c) 2003-2011 ZeroC, Inc. All rights reserved.
-//
-// This copy of Ice is licensed to you under the terms described in the
-// ICE_LICENSE file included in this distribution.
-//
-// **********************************************************************
-
 package sr.ice.server;
 
-import Demo.*;
-import Ice.Identity;
-import sr.ice.impl.CalcI;
 
 public class Server
 {
@@ -22,39 +10,43 @@ public class Server
 
 		try
 		{
-			// 1. Inicjalizacja ICE
+			System.out.println("Server : Creating comunicator");
 			communicator = Ice.Util.initialize(args);
-
-			// 2. Konfiguracja adaptera
-			// METODA 1 (polecana): Konfiguracja adaptera Adapter1 jest w pliku konfiguracyjnym podanym jako parametr uruchomienia serwera
-			//Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Adapter1");  
-			
-			// METODA 2 (niepolecana): Konfiguracja adaptera Adapter1 jest w kodzie Ÿród³owym
+			System.out.println("Server : Creating Adapter");
 			Ice.ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Adapter1", 
 					"tcp -h localhost -p 10000:udp -h localhost -p 10000");
 
-			// 3-4. Stworzenie serwanta/serwantów, dodanie wpisów do ASM, konfiguracja mechanizmów zarz¹dzania serwantami
-			
-			ServantLocator locator = new ServantLocator("temp", adapter);
-			adapter.addServantLocator(locator, "k1");
-			adapter.addServantLocator(locator, "k2");
-			adapter.addServantLocator(locator, "k3");
-			adapter.addServantLocator(locator, "k4");
-			adapter.addServantLocator(locator, "k5");
-
-            
-           
-            
-           // ServantLocator = locator = new ServantLocator("k2");
-//            Ice.ServantLocator mylocator = new ServantLocator1("A", servant3); //TODO, example only
-//
-//            adapter.add(servant2, new Identity("name", "category")); //TODO, example only
-//                       
-//            adapter.addServantLocator(mylocator, "category"); //TODO, example only
-//            adapter.addDefaultServant(servant3, "category"); //TODO, example only
+//			System.out.println("Server :Creating ServantLocator");
+//			ServantLocator locator = new ServantLocator("temp", adapter);
 //			
 
-            // 5. Aktywacja adaptera i przejœcie w pêtlê przetwarzania ¿¹dañ
+			System.out.println("Server :Creating ServantLocatorK1");
+			ServantLocatorK1 locatorK1 = new ServantLocatorK1("temp",adapter);
+
+			System.out.println("Server :Creating ServantLocatorK2");
+			ServantLocatorK2 locatorK2 = new ServantLocatorK2("temp");
+
+			System.out.println("Server :Creating ServantLocatorK3");
+			ServantLocatorK3 locatorK3 = new ServantLocatorK3("temp");
+
+			System.out.println("Server :Creating ServantLocatorK4");
+			ServantLocatorK4 locatorK4 = new ServantLocatorK4("temp");
+			
+			System.out.println("Server :Creating ServantLocatorK5");
+			ServantLocatorK5 locatorK5 = new ServantLocatorK5("temp");
+			
+			
+			
+			System.out.println("Server : Adding Servant Locator k1");
+			adapter.addServantLocator(locatorK1, "k1");
+			System.out.println("Server : Adding Servant Locator k2");
+			adapter.addServantLocator(locatorK2, "k2");
+			System.out.println("Server : Adding Servant Locator k3");
+			adapter.addServantLocator(locatorK3, "k3");
+			System.out.println("Server : Adding Servant Locator k4");
+			adapter.addServantLocator(locatorK4, "k4");
+			System.out.println("Server : Adding Servant Locator k5");
+			adapter.addServantLocator(locatorK5, "k5");
 			adapter.activate();
 			System.out.println("Entering event processing loop...");
 			communicator.waitForShutdown();
@@ -67,7 +59,6 @@ public class Server
 		}
 		if (communicator != null)
 		{
-			// Clean up
 			try
 			{
 				communicator.destroy();
@@ -87,4 +78,4 @@ public class Server
 		Server app = new Server();
 		app.t1(args);
 	}
-}
+}	
